@@ -9,15 +9,15 @@ RUN yum install -y epel-release centos-release-scl && \
     sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-SCL*.repo && \
     sed -ri 's|#\s*baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-SCL*.repo
 
-# Install devtoolset-11 and build dependencies
+# Install devtoolset-11, rh-python38, and build dependencies
 RUN yum install -y \
         devtoolset-11-gcc \
         devtoolset-11-gcc-c++ \
         devtoolset-11-binutils \
-        python3 \
-        python3-devel \
-        python3-pip \
-        git \
+        rh-python38 \
+        rh-python38-python-devel \
+        rh-python38-python-pip \
+        rh-git227 \
         zlib-devel \
         make \
         unzip \
@@ -29,7 +29,7 @@ RUN yum install -y \
     rm -rf /var/cache/yum
 
 # Python packages needed for LLVM build
-RUN pip3 install pygments pyyaml
+RUN scl enable rh-python38 "pip3 install pygments pyyaml"
 
 # Install cmake (CentOS 7 default cmake is too old for LLVM)
 RUN curl -fsSL https://github.com/Kitware/CMake/releases/download/v3.28.3/cmake-3.28.3-linux-x86_64.tar.gz | \
@@ -41,13 +41,13 @@ RUN curl -fsSL -o /tmp/ninja.zip \
     unzip /tmp/ninja.zip -d /usr/local/bin && \
     rm /tmp/ninja.zip
 
-# Install mold linker (static binary)
+# Install mold linker (static binary, includes /usr/local/libexec/mold/ld)
 RUN curl -fsSL https://github.com/rui314/mold/releases/download/v2.35.1/mold-2.35.1-x86_64-linux.tar.gz | \
     tar xz -C /usr/local --strip-components=1
 
-# Enable devtoolset-11 by default
-ENV PATH=/opt/rh/devtoolset-11/root/usr/bin:$PATH \
-    LD_LIBRARY_PATH=/opt/rh/devtoolset-11/root/usr/lib64:/opt/rh/devtoolset-11/root/usr/lib
+# Enable devtoolset-11 and rh-python38 by default
+ENV PATH=/opt/rh/devtoolset-11/root/usr/bin:/opt/rh/rh-python38/root/usr/bin:/opt/rh/rh-git227/root/usr/bin:$PATH \
+    LD_LIBRARY_PATH=/opt/rh/devtoolset-11/root/usr/lib64:/opt/rh/devtoolset-11/root/usr/lib:/opt/rh/rh-python38/root/usr/lib64:/opt/rh/rh-git227/root/usr/lib64
 
 # Install VE cross-compilation RPMs to /opt
 RUN mkdir -p /tmp/rpms && cd /tmp/rpms && \
