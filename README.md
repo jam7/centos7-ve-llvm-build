@@ -1,6 +1,11 @@
-# centos7-ve-docker
+# centos7-ve-llvm-build
 
 CentOS 7ベースのLLVM（VEターゲット）ビルド環境のDockerイメージ。
+
+## 特徴
+
+- **高速リンク**: mold linkerを導入済み。LLVMのような大規模プロジェクトのリンク時間を大幅に短縮できる。
+- **VEクロスビルド対応**: VE用のヘッダ（kheaders-ve1）やライブラリ（glibc-ve1, binutils-ve）を導入済み。実機がない通常のLinux環境からでもVE用ランタイムライブラリをクロスビルドできる。
 
 ## ビルド
 
