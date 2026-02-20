@@ -46,6 +46,8 @@ RUN yum install -y epel-release centos-release-scl && \
     curl -fsSLO https://sxauroratsubasa.sakura.ne.jp/repos/TSUBASA-repo_el7.9/veos/3.3.0/x86_64/glibc-ve1-devel-2.21-18.el7.x86_64.rpm && \
     curl -fsSLO https://sxauroratsubasa.sakura.ne.jp/repos/TSUBASA-repo_el7.9/veos/3.0.1/x86_64/kheaders-ve1-3.10.0-514.el7_5.el7.x86_64.rpm && \
     rpm -ivh --nodeps *.rpm && \
+    # VE kernel headers lack futex.h; copy from host kernel-headers
+    cp /usr/include/linux/futex.h /opt/nec/ve/include/linux/futex.h && \
     # Remove unzip (only needed for ninja), temp files, and caches
     yum remove -y unzip && \
     yum clean all && \
