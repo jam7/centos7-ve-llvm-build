@@ -36,7 +36,7 @@ RUN yum install -y epel-release centos-release-scl && \
     unzip /tmp/ninja.zip -d /usr/local/bin && \
     rm /tmp/ninja.zip && \
     # Install mold linker
-    curl -fsSL https://github.com/rui314/mold/releases/download/v2.35.1/mold-2.35.1-x86_64-linux.tar.gz | \
+    curl -fsSL https://github.com/rui314/mold/releases/download/v2.40.4/mold-2.40.4-x86_64-linux.tar.gz | \
         tar xz -C /usr/local --strip-components=1 \
             --exclude='share' && \
     # Install VE cross-compilation RPMs
