@@ -28,19 +28,15 @@ CentOS 7はEOL（2024年6月）のため、`vault.centos.org`にミラーを切�
 ### コンパイラ
 
 `devtoolset-11`（GCC 11系）を使用。CentOS 7 SCLで確実に利用可能な最新版。
-devtoolset-12がSCL vaultリポジトリに存在すれば、Dockerfile中の`11`を`12`に置換するだけで切り替え可能。
 
 ### ubuntu-ve-apptainer との対応
 
-参考元: `../ubuntu-ve-apptainer/ubuntu-ve-llvm-build.def`（Ubuntu 24.04 / Apptainer）
-
-| Ubuntu (参考元) | CentOS 7 (本リポジトリ) | 備考 |
+| Target | CentOS 7 (本リポジトリ) | 備考 |
 |---|---|---|
 | `g++` | `devtoolset-11-gcc-c++` | SCL経由でモダンなGCCを導入 |
 | `cmake` | CMake 3.28.3 バイナリ直接DL | yumのcmakeはLLVMに必要なバージョンを満たさない |
 | `ninja-build` | Ninja 1.11.1 バイナリ直接DL | EPEL版が古いためバイナリを使用 |
-| `python3`, `python3-dev` | `python3`, `python3-devel` | パッケージ名の差異のみ |
+| `python3`, `python3-dev` | `rh-python38`, `rh-python38-python-devel`, `rh-python38-python-pip` | SCL経由で導入 |
 | `python3-pygments`, `python3-yaml` | `pip3 install pygments pyyaml` | CentOS 7のyumパッケージが古い/不足のためpipで導入 |
-| `mold` | mold 2.35.1 静的バイナリ直接DL | GitHubリリースのstatic binary。`libatomic`パッケージが別途必要 |
-| `rpm2cpio`, `cpio` | `rpm -ivh --nodeps` | CentOS 7ネイティブのrpmコマンドで直接インストール（`rpm2cpio \| cpio`だと0バイトになる問題を回避） |
-| VE RPMs (rpm2cpio展開) | el7用RPMを使用 | binutils-ve, glibc-ve1, kheaders-ve1 |
+| `mold` | mold 2.40.4 静的バイナリ直接DL | GitHubリリースのstatic binary。`libatomic`パッケージが別途必要 |
+| VE RPMs | el7用RPMを使用 | binutils-ve, glibc-ve1, kheaders-ve1 |
